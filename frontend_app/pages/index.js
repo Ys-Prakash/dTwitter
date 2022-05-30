@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import Web3Modal from "web3modal"
+import { useViewerRecord } from "@self.id/react"
 import { useEffect, useRef, useState } from "react"
 import { EthereumAuthProvider } from "@self.id/web"
 import { useViewerConnection } from "@self.id/react"
@@ -34,7 +35,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-      if (connection.status !== "connected" || connection.status !== "connecting") {
+      if (connection.status !== "connected") {
         web3ModalRef.current = new Web3Modal({
           network: "rinkeby",
           providerOptions: {},
@@ -44,27 +45,72 @@ export default function Home() {
   }, [connection.status]);
 
   return (
-    <div className="flex flex-row min-h-screen justify-center items-center">
-      <div className="flex flex-row min-h-screen justify-center items-center place-content-center grid grid-flow-col auto-cols-max">
-        <div className="w-full h-40 pb-12">
-          <div className="text-2xl font-semibold place-content-center">Connect your wallet</div> 
-        </div> 
-        <div className="w-full place-content-center h-50 pt-12 place-content-center pr-8">
-          {connection.status === "connected" ? (
-            <div className = "text-2xl">Connected</div>
-          ) : (
-            <div className="pr-10">
+    <div className="flex h-screen">
+      <div className="m-auto">
+        {connection.status === "connected" ? (
+          <div className="m-auto p-4"><RecordSetter /></div>
+        ) : (
+          <div className="flex-col justify-center items-center">
+            <div className="text-center text-2xl p-4">Connect your wallet</div>
+            <div className="p-4">
               <button
                 onClick={connectToSelfID}
-                className="rounded-full transition ease-in-out delay-150 bg-blue-500 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300"
+                className="rounded-full bg-orange-300 hover:bg-orange-500 p-2"
                 disabled={connection.status === "connecting"}
               >
                 Connect
               </button>
             </div>
-          )}
+          </div>
+        )}
+      </div>  
+    </div>    
+  )
+}
+
+function RecordSetter() {
+  
+  const [name, setName] = useState("")
+  const [description, setDescription] = useState("")
+
+  const record = useViewerRecord("basicProfile")
+
+  const updateRecordContent = async (name, description) => {
+    await record.merge({
+      name: name,
+      description: description
+    });
+  };
+
+  return (
+    <div className="flex h-screen">
+      <div className="m-auto">
+        {record.content ? (
+          <div className="m-auto text-center text-xl p-4">
+            Hello {record.content.name}! <br />
+            {record.content.description}
+          </div>
+        ) : (
+          <div className="m-auto text-center text-xl p-4">
+            You do not have a profile record attached to your 3ID. Create abasic profile by setting a name below.
+          </div>
+        )}
+        <div className="flex-col items-center justify-center">
+          <input
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="flex-initial m-auto p-4" />
+          <input
+            type="text"
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="flex-initial m-auto p-4" />
+          <button className="flex-initial rounded-full bg-orange-300 hover:bg-orange-500 p-2" onClick={() => updateRecordContent(name, description)}>Update</button>
         </div>
-      </div>
-    </div>
-    )
+      </div>  
+    </div>    
+  )
 }
