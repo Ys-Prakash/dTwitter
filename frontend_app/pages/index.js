@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
+import Link from 'next/link'
 import Web3Modal from "web3modal"
 import { useViewerRecord } from "@self.id/react"
 import { useEffect, useRef, useState } from "react"
@@ -90,6 +91,13 @@ function Profile (props) {
       <div className="text-center text-xl p-4">
         {props.record.content.description}
       </div>
+      <div className="p-4 text-center">
+        <Link href="/edit">
+          <button className="rounded-md bg-orange-300 hover:bg-orange-500 px-5 py-2">
+            Edit
+          </button>
+        </Link>
+      </div>
     </div>
   )
 }
@@ -124,7 +132,7 @@ function Signup(props) {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             className="flex-initial m-auto p-4" />
-          <button className="flex-initial rounded-full bg-orange-300 hover:bg-orange-500 p-2" onClick={() => updateRecordContent(name, description)}>Update</button>
+          <button className="flex-initial rounded-full bg-orange-300 hover:bg-orange-500 p-2" onClick={() => updateRecordContent(name, description)}>Sign up</button>
         </div>   
   )
 }
