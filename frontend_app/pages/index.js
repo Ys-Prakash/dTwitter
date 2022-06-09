@@ -1,6 +1,5 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 import Web3Modal from "web3modal"
 import { useViewerRecord } from "@self.id/react"
 import { useEffect, useRef, useState } from "react"
@@ -45,12 +44,11 @@ export default function Home() {
   }, [connection.status]);
 
   return (
-    <div className="flex h-screen">
-      <div className="m-auto">
+    <div className="w-full h-screen relative">
         {connection.status === "connected" ? (
-          <div className="m-auto p-4"><RecordSetter /></div>
+          <CheckSignup />
         ) : (
-          <div className="flex-col justify-center items-center">
+          <div className="absolute w-6/12 h-1/2 rounded-md top-1/4 left-1/4 shadow-2xl p-5 flex flex-col justify-center items-center">
             <div className="text-center text-2xl p-4">Connect your wallet</div>
             <div className="p-4">
               <button
@@ -63,17 +61,44 @@ export default function Home() {
             </div>
           </div>
         )}
-      </div>  
-    </div>    
+    </div>   
   )
 }
 
-function RecordSetter() {
-  
-  const [name, setName] = useState("")
-  const [description, setDescription] = useState("")
+function CheckSignup() {
 
   const record = useViewerRecord("basicProfile")
+
+  return (
+    <>
+      {record.content ? (
+        <Profile record={record} />
+      ) : (
+        <Signup record={record} />
+      )}
+    </>
+  )
+}
+
+function Profile (props) { 
+
+  return (
+    <div className="absolute w-6/12 h-1/2 rounded-md top-1/4 left-1/4 shadow-2xl p-5 flex flex-col justify-center items-center">
+      <div className="p-4 text-center text-2xl">
+        Hello, {props.record.content.name}
+      </div>
+      <div className="text-center text-xl p-4">
+        {props.record.content.description}
+      </div>
+    </div>
+  )
+}
+
+
+function Signup(props) {
+
+  const [name, setName] = useState("")
+  const [description, setDescription] = useState("")
 
   const updateRecordContent = async (name, description) => {
     await record.merge({
@@ -83,19 +108,10 @@ function RecordSetter() {
   };
 
   return (
-    <div className="flex h-screen">
-      <div className="m-auto">
-        {record.content ? (
-          <div className="m-auto text-center text-xl p-4">
-            Hello {record.content.name}! <br />
-            {record.content.description}
+        <div className="absolute w-6/12 h-1/2 rounded-md top-1/4 left-1/4 shadow-2xl p-5 flex flex-col items-center justify-center">
+          <div className="p-4 text-center text-xl">
+            <p>Please signup.</p>
           </div>
-        ) : (
-          <div className="m-auto text-center text-xl p-4">
-            You do not have a profile record attached to your 3ID. Create abasic profile by setting a name below.
-          </div>
-        )}
-        <div className="flex-col items-center justify-center">
           <input
             type="text"
             placeholder="Name"
@@ -109,8 +125,6 @@ function RecordSetter() {
             onChange={(e) => setDescription(e.target.value)}
             className="flex-initial m-auto p-4" />
           <button className="flex-initial rounded-full bg-orange-300 hover:bg-orange-500 p-2" onClick={() => updateRecordContent(name, description)}>Update</button>
-        </div>
-      </div>  
-    </div>    
+        </div>   
   )
 }
