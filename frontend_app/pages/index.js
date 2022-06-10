@@ -1,6 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
+import Tweet from '../Components/Tweet.js'
 import Web3Modal from "web3modal"
 import { useViewerRecord } from "@self.id/react"
 import { useEffect, useRef, useState } from "react"
@@ -73,7 +74,7 @@ function CheckSignup() {
   return (
     <>
       {record.content ? (
-        <Profile record={record} />
+        <Tweet />
       ) : (
         <Signup record={record} />
       )}
@@ -109,7 +110,7 @@ function Signup(props) {
   const [description, setDescription] = useState("")
 
   const updateRecordContent = async (name, description) => {
-    await record.merge({
+    await props.record.merge({
       name: name,
       description: description
     });
