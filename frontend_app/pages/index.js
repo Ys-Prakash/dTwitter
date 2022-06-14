@@ -38,7 +38,7 @@ export default function Home() {
   useEffect(() => {
       if (connection.status !== "connected") {
         web3ModalRef.current = new Web3Modal({
-          network: "rinkeby",
+          network: "mumbai",
           providerOptions: {},
           disableInjectedProvider: false,
         });
