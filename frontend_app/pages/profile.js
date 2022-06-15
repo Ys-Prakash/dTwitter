@@ -4,8 +4,9 @@ import { useViewerRecord } from "@self.id/react"
 
 export default function Profile () { 
 
-  const router = useRouter
-  const record = router.query
+  const record = useViewerRecord("basicProfile")
+  // const router = useRouter
+  // const record = router.query
 
     return (
       <div className="absolute w-6/12 h-1/2 rounded-md top-1/4 left-1/4 shadow-2xl p-5 flex flex-col justify-center items-center">

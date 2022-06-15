@@ -3,7 +3,6 @@ import { useState } from "react"
 import useRouter from 'next/router'
 import { useViewerRecord } from "@self.id/react"
 
-
 import React from 'react'
 
 export default function Editprofile() {

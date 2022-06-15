@@ -14,12 +14,19 @@ import { Web3Provider } from "@ethersproject/providers"
 export default function Home() {
 
   const [connection, connect, disconnect] = useViewerConnection();
+  // const [loading, setloading] = useState(false);
 
   const web3ModalRef = useRef();
 
-  const getProvider = async () => {
+  const getProvider = async (needSigner = false) => {
       const provider = await web3ModalRef.current.connect();
       const wrappedProvider = new Web3Provider(provider);
+
+      if (needSigner) {
+        const signer = wrappedProvider.getSigner();
+        return signer;
+      }
+
       return wrappedProvider;
   }
 
@@ -48,14 +55,14 @@ export default function Home() {
   return (
     <div className="w-full h-screen relative">
         {connection.status === "connected" ? (
-          <CheckSignup />
+          <CheckSignup web3ModalRef={web3ModalRef} />
         ) : (
           <div className="absolute w-6/12 h-1/2 rounded-md top-1/4 left-1/4 shadow-2xl p-5 flex flex-col justify-center items-center">
             <div className="text-center text-2xl p-4">Connect your wallet</div>
             <div className="p-4">
               <button
                 onClick={connectToSelfID}
-                className="rounded-full bg-orange-300 hover:bg-orange-500 p-2"
+                className="rounded-full bg-orange-300 hover:bg-orange-500 p-2 disabled:opacity-50 disabled:cursor-wait"
                 disabled={connection.status === "connecting"}
               >
                 Connect
@@ -67,14 +74,14 @@ export default function Home() {
   )
 }
 
-function CheckSignup() {
+function CheckSignup(props) {
 
   const record = useViewerRecord("basicProfile")
 
   return (
     <>
       {record.content ? (
-        <Tweet record={record} />
+        <Tweet web3ModalRef={props.web3ModalRef} />
       ) : (
         <Signup record={record} />
       )}
