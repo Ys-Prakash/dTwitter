@@ -53,13 +53,13 @@ export default function Tweet(props) {
 
   return (
     <div className="relative w-full h-full bg-tweetpage-pattern bg-no-repeat bg-cover">
-      <div className="absolute w-full p-5 top-0 left-0 flex justify-end">
+      {/* <div className="absolute w-full p-5 top-0 left-0 flex justify-end">
         <Link href="/profile">
           <button className="rounded-md bg-fuchsia-900 px-4 py-2 text-neutral-50">
             Profile
           </button>
         </Link>
-      </div>
+      </div> */}
       <div className="absolute w-6/12 ml-5 mt-32 text-neutral-50 text-3xl">
         Welcome back {record.content.name}!
       </div>
