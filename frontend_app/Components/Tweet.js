@@ -9,6 +9,7 @@ export default function Tweet(props) {
 
   const [tokenIdsMinted, setTokenIdsMinted] = useState("0")
   const [loading, setloading] = useState(false)
+  const [eligible, setEligibility] = useState(true)
 
   const record = useViewerRecord("basicProfile")
 
@@ -53,6 +54,13 @@ export default function Tweet(props) {
       const _tokenIds = await nftContract.tokenIds();
       //_tokenIds is a `Big Number`. We need to convert the Big Number to a string
       setTokenIdsMinted(_tokenIds.toString());
+
+      // For getting the number of NFTs minted by the connected wallet address
+      const nft_tracker = await nftContract.nftTracker();
+      const user_address = await signer.getAddress();
+      if (nft_tracker[user_address].length > 2) {
+        setEligibility(false);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -64,6 +72,13 @@ export default function Tweet(props) {
     const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, signer);
     const _tokenIds = await nftContract.tokenIds();
     setTokenIdsMinted(_tokenIds.toString());
+    
+    // For getting the number of NFTs minted by the connected wallet address
+    const nft_tracker = await nftContract.nftTracker();
+    const user_address = await signer.getAddress();
+    if (nft_tracker[user_address].length > 2) {
+      setEligibility(false);
+    }
   }, [])
 
   return (
@@ -82,9 +97,15 @@ export default function Tweet(props) {
         Mint special DSM black hole NFTs! 
       </div>
       <div className="absolute mt-72 ml-5 w-3/12">
-        <button className="rounded-md bg-fuchsia-900 px-6 py-4 text-neutral-50 text-2xl disabled:opacity-50 disabled:cursor-wait" onClick={publicMint} disabled={loading == true}>
-          Mint a DSM NFT
-        </button> 
+        {eligible ? (
+          <button className="rounded-md bg-fuchsia-900 px-6 py-4 text-neutral-50 text-2xl disabled:opacity-50 disabled:cursor-wait" onClick={publicMint} disabled={loading == true}>
+            Mint a DSM NFT
+          </button> 
+        ) : (
+          <div className="rounded-md bg-fuchsia-900 px-6 py-4 text-neutral-50 text-2xl ">
+            Cannot mint NFT. Limit exceeded.
+          </div>
+        )}
       </div>
       <div className="absolute w-6/12 ml-5 mt-96 text-neutral-50 text-2xl">
         {tokenIdsMinted}/10 NFTs minted.
