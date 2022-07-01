@@ -14,7 +14,14 @@ export default function Tweet(props) {
 
   const getProviderOrSigner = async (needSigner = false) => {
     const provider = await props.web3ModalRef.current.connect();
-    const web3Provider = new Web3Provider(provider);
+    const web3Provider = new Web3Provider(provider)
+
+    // For trigerring alert if not onnected to Mumbai network.
+    const { chainId } = await web3Provider.getNetwork();
+    if (chainId !== 80001) {
+      window.alert("Change the network to Mumbai");
+      throw new Error("Change network to Mumbai");
+    }
 
     if (needSigner) {
       const signer = web3Provider.getSigner();
@@ -50,6 +57,14 @@ export default function Tweet(props) {
       console.error(err);
     }
   }
+
+  useEffect(async () => {
+    // For getting the no. of tokens minted upon initial render. 
+    const signer = await getProviderOrSigner(true);
+    const nftContract = new Contract(NFT_CONTRACT_ADDRESS, abi, signer);
+    const _tokenIds = await nftContract.tokenIds();
+    setTokenIdsMinted(_tokenIds.toString());
+  }, [])
 
   return (
     <div className="relative w-full h-full bg-tweetpage-pattern bg-no-repeat bg-cover">

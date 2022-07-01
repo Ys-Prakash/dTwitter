@@ -58,7 +58,7 @@ export default function Home() {
           <CheckSignup web3ModalRef={web3ModalRef} />
         ) : (
           <div className="absolute w-6/12 h-1/2 rounded-md top-1/4 left-1/4 shadow-2xl p-5 flex flex-col justify-center items-center">
-            <div className="text-center text-2xl p-4">Connect your wallet</div>
+            <div className="text-center text-2xl p-4">Connect your Metamask wallet</div>
             <div className="p-4">
               <button
                 onClick={connectToSelfID}
