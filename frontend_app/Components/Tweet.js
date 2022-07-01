@@ -92,9 +92,3 @@ export default function Tweet(props) {
     </div>
   )
 }
-
-//TODO: Change this component to a NFT mint component. This will have:
-// 1. A button, at the bottom left, to see own's profile.  
-// 2. A button to mint a NFT.
-// 3. No. of NFTs available to mint (each gets 2).
-// 4. Design the page well.  
