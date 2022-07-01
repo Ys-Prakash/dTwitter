@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useViewerRecord } from "@self.id/react"
 import { Contract, providers, utils } from "ethers";
